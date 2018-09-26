@@ -65,6 +65,10 @@ class Unicorn::HttpServer
   end
   # :stopdoc:
 
+  def self.processing_middleware
+    @@processing_middleware
+  end
+
   # Creates a working server on host:port (strange things happen if
   # port isn't a Number).  Use HttpServer::run to start the server and
   # HttpServer.run.join to join the thread that's processing
