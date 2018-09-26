@@ -22,6 +22,8 @@ class Unicorn::HttpServer
   include Unicorn::SocketHelper
   include Unicorn::HttpResponse
 
+  @@processing_middleware = []
+
   # all bound listener sockets
   # note: this is public used by raindrops, but not recommended for use
   # in new projects
@@ -622,6 +624,8 @@ class Unicorn::HttpServer
       client.shutdown # in case of fork() in Rack app
       client.close # flush and uncork socket immediately, no keepalive
     end
+
+    @@processing_middleware.each { |d| d.call() }
   rescue => e
     handle_error(client, e)
   end
