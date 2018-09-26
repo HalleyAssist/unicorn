@@ -158,13 +158,10 @@ clean:
 man html:
 	$(MAKE) -C Documentation install-$@
 
-pkg_extra := GIT-VERSION-FILE lib/unicorn/version.rb LATEST NEWS \
+pkg_extra := GIT-VERSION-FILE lib/unicorn/version.rb \
              $(ext)/unicorn_http.c $(man1_paths)
 
-NEWS:
-	$(OLDDOC) prepare
-
-.manifest: $(ext)/unicorn_http.c man NEWS
+.manifest: $(ext)/unicorn_http.c man
 	(git ls-files && for i in $@ $(pkg_extra); do echo $$i; done) | \
 	  LC_ALL=C sort > $@+
 	cmp $@+ $@ || mv $@+ $@
@@ -178,7 +175,6 @@ doc: .document $(ext)/unicorn_http.c man html .olddoc.yml $(PLACEHOLDERS)
 	$(RDOC) -f oldweb
 	$(OLDDOC) merge
 	install -m644 COPYING doc/COPYING
-	install -m644 NEWS.atom.xml doc/NEWS.atom.xml
 	install -m644 $(shell LC_ALL=C grep '^[A-Z]' .document) doc/
 	install -m644 $(man1_paths) doc/
 	tar cf - $$(git ls-files examples/) | (cd doc && tar xf -)
