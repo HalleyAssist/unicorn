@@ -23,6 +23,7 @@ class Unicorn::HttpServer
   include Unicorn::HttpResponse
 
   @@processing_middleware = []
+  @@processing_after = []
 
   # all bound listener sockets
   # note: this is public used by raindrops, but not recommended for use
@@ -67,6 +68,10 @@ class Unicorn::HttpServer
 
   def self.processing_middleware
     @@processing_middleware
+  end
+
+  def self.processing_after
+    @@processing_after
   end
 
   # Creates a working server on host:port (strange things happen if
@@ -629,7 +634,7 @@ class Unicorn::HttpServer
       client.close # flush and uncork socket immediately, no keepalive
     end
 
-    @@processing_middleware.each { |d| d.call() }
+    processing_middleware.each { |d| d.call() }
   rescue => e
     handle_error(client, e)
   end
@@ -722,6 +727,8 @@ class Unicorn::HttpServer
       end
 
       ppid == Process.ppid or return
+
+      processing_after.each{ |m| m.call() }
 
       # timeout used so we can detect parent death:
       worker.tick = time_now.to_i
