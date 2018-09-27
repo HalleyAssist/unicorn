@@ -634,7 +634,7 @@ class Unicorn::HttpServer
       client.close # flush and uncork socket immediately, no keepalive
     end
 
-    processing_middleware.each { |d| d.call() }
+    @@processing_middleware.each { |d| d.call() }
   rescue => e
     handle_error(client, e)
   end
@@ -728,7 +728,7 @@ class Unicorn::HttpServer
 
       ppid == Process.ppid or return
 
-      processing_after.each{ |m| m.call() }
+      @@processing_after.each{ |m| m.call() }
 
       # timeout used so we can detect parent death:
       worker.tick = time_now.to_i
