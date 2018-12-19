@@ -15,5 +15,4 @@ jobs:
           name: Build
           command: make gem
       - store_artifacts:
-          path: ~/unicorn/pkg/*.gem
-          destination: unicorn.gem
+          path: ~/unicorn/pkg/
