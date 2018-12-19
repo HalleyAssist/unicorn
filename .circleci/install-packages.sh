@@ -2,7 +2,7 @@
 
 set -e
 
-pkgs=(git build-essential perl lib1g-dev ragel)
+pkgs=(git build-essential perl ragel)
 
 # Work from the directory CI will cache
 mkdir -p ~/cache/deb
