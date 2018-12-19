@@ -10,6 +10,7 @@ jobs:
     working_directory: ~/unicorn
     steps:
       - checkout
+      - run: sudo bash ./.circleci/install-packages.sh
       - run:
           name: Build
           command: make gem
