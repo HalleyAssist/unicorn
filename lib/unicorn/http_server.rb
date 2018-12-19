@@ -633,8 +633,6 @@ class Unicorn::HttpServer
       client.shutdown # in case of fork() in Rack app
       client.close # flush and uncork socket immediately, no keepalive
     end
-
-    @@processing_middleware.each { |d| d.call() }
   rescue => e
     handle_error(client, e)
   end
@@ -710,7 +708,11 @@ class Unicorn::HttpServer
         # Unicorn::Worker#kgio_tryaccept is not like accept(2) at all,
         # but that will return false
         if client = sock.kgio_tryaccept
-          process_client(client)
+		  handler = @@processing_middleware.reduce(->{ process_client(client) }) do |sum,d|
+			->{d.call { sum.call }}
+		  end
+		  handler.call
+		  
           nr += 1
           worker.tick = time_now.to_i
         end
