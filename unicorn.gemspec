@@ -2,6 +2,8 @@
 manifest = File.exist?('.manifest') ?
   IO.readlines('.manifest').map!(&:chomp!) : `git ls-files`.split("\n")
 
+manifest += ["lib/unicorn/version.rb"]
+  
 # don't bother with tests that fork, not worth our time to get working
 # with `gem check -t` ... (of course we care for them when testing with
 # GNU make when they can run in parallel)
