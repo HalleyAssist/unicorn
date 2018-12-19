@@ -4,8 +4,8 @@
 #
 version: 2
 jobs:
-    build:
-      working_directory: ~/unicorn
+  build:
+    working_directory: ~/unicorn
     steps:
       - checkout
       - run:
